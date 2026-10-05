@@ -132,7 +132,7 @@
 ### 5.1 Windows PowerShell
 
 ```powershell
-cd C:\Users\15750\Documents\deepseek-harness\default-workspace\se-assignment1\832401320_calculator_backend
+cd C:\path\to\832401320_calculator_backend
 
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
