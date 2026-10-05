@@ -1,0 +1,40 @@
+# ============================================================================
+# Render Blueprint（可选部署方案 B）
+#
+# 用法：把后端仓库推到 GitHub → Render 控制台 New + → Blueprint → 选择该仓库。
+#
+# 重要提醒：
+#   Render 免费实例的文件系统是**临时的**，重新部署或实例重启后 SQLite 文件会丢失，
+#   历史记录也随之消失。要让"历史持久化"真正可靠，请使用外部 PostgreSQL：
+#     DATABASE_URL = postgresql://<user>:<password>@<host>/<db>?sslmode=require
+#   推荐用 Neon 免费 Postgres（见 docs/DEPLOY.md）。
+# ============================================================================
+services:
+  - type: web
+    name: 832401320-calculator-api
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: APP_NAME
+        value: Front-back Separated Calculator API
+      - key: HOST
+        value: 0.0.0.0
+      - key: PORT
+        value: "8000"
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: TIMEZONE_OFFSET
+        value: "8"
+      # 在 Render 控制台手工填写，不要写进仓库
+      - key: DATABASE_URL
+        sync: false
+
+  # 可选：使用 Render 自带的 PostgreSQL（免费额度有限，创建后把 Connection String 填到上面的 DATABASE_URL）
+  # - type: pserv
+  #   name: 832401320-calculator-db
+  #   plan: free
+  #   ipAllowList: []

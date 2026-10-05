@@ -1,0 +1,33 @@
+# ============================================================================
+# Git 换行符与二进制文件策略
+#
+# 为什么必须有这个文件：
+#   Windows 上的 git 默认可能把仓库里的 LF 转成 CRLF（或反向转换）。对本项目来说
+#   这不是"风格问题"而是**正确性问题**：
+#     * start-all.bat 必须保持 CRLF —— cmd.exe 解析 LF 行尾的批处理会错乱
+#       （实测报错形如 `'hell' is not recognized as an internal or external command`）；
+#     * *.sh 必须保持 LF —— 否则在 Linux/macOS 上会报 `bad interpreter`；
+#     * *.py / *.js / *.md / *.sql 统一使用 LF，避免跨平台 diff 噪声。
+# ============================================================================
+* text=auto eol=lf
+
+# Windows 专用脚本：强制 CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Shell 脚本：强制 LF
+*.sh text eol=lf
+
+# 二进制文件：不做任何换行符转换
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.db binary
+*.sqlite binary
+*.woff binary
+*.woff2 binary
+*.zip binary

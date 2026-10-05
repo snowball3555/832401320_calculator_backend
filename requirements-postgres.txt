@@ -1,0 +1,10 @@
+# 使用 PostgreSQL 时需要额外安装的驱动
+#
+# 安装：pip install -r requirements-postgres.txt
+# 然后设置环境变量：
+#   DATABASE_URL=postgresql://user:password@host:5432/dbname?sslmode=require
+#
+# 代码会自动把 postgres:// 与 postgresql:// 前缀统一改写成 postgresql+psycopg://，
+# 业务代码无需任何改动（见 app/db/database.py 的 normalize_database_url）。
+
+psycopg[binary]>=3.1,<4.0

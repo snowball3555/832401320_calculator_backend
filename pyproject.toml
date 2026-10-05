@@ -1,0 +1,51 @@
+# ============================================================================
+# 代码风格与静态检查配置（ruff）
+#
+# 本文件让 codestyle.md 里的约定**可被机器校验**，而不是只靠文字约束：
+#
+#     pip install ruff
+#     ruff check .          # 静态检查（当前输出 All checks passed!）
+#
+# 注意：本项目**只用 ruff check 作为门禁**，不用 `ruff format` 强制重排。
+# 原因是 codestyle.md 逐字引用了源码片段，自动重排会让文档与源码脱节；
+# 手写排版（对齐的注释、按语义分组的常量）对可读性更有价值。
+#
+# 对应 codestyle.md 的约定：
+#   * 行宽上限 110（line-length，见 codestyle.md 4.1）
+#   * 目标运行时 Python 3.10+（target-version）
+#   * 导入顺序：标准库 / 第三方 / 本项目（I 规则集）
+#   * 使用现代写法：`X | None`、内置泛型（UP 规则集）
+# ============================================================================
+
+[project]
+name = "calculator-backend"
+version = "1.0.0"
+description = "软件工程实践第一次作业：前后端分离计算器系统的后端服务"
+requires-python = ">=3.10"
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+# 运行期产物与文档不参与代码检查
+exclude = [".venv", "venv", "__pycache__", "*.db", "*.db-wal", "*.db-shm", "docs"]
+
+[tool.ruff.lint]
+# 选择规则集：
+#   E/W pycodestyle（含 E501 行宽）  F pyflakes（未使用变量/导入等真实缺陷）
+#   I   isort（导入顺序）            UP pyupgrade（现代语法）
+#   B   flake8-bugbear（常见陷阱）
+select = ["E", "W", "F", "I", "UP", "B"]
+# 允许长行出现在"无法有意义地换行"的场景：URL 与带中文的 docstring 说明
+ignore = []
+
+[tool.ruff.lint.per-file-ignores]
+# 测试文件里 parametrize 的参数列表天然偏长，且断言信息更重要
+"tests/*" = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
