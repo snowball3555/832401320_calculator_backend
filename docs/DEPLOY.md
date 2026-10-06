@@ -169,3 +169,21 @@ python run.py
 | 历史记录突然空了 | 免费实例磁盘被重置 | 改用 Neon PostgreSQL |
 | 前端一直显示"后端离线" | 后端未启动 / 地址填错 | 打开 `/api/health` 确认，检查前端 `js/config.js` |
 | 计算返回 400 | 表达式非法或除数为 0 | 属预期行为，响应体里有 `error_code` 与中文提示 |
+---
+
+## 单实例部署（最省事：一个地址同时提供页面与接口）
+
+本项目支持"后端顺带托管前端"（环境变量 `FRONTEND_DIR`），因此**一次部署**就能同时提供
+计算器页面、`/api/*` 接口与 `/docs` 文档，而且天然同源、没有跨域问题。
+
+镜像构建时会自动把前端仓库克隆到 `/app/frontend` 并设置 `FRONTEND_DIR=/app/frontend`
+（见 `Dockerfile` 里的 `ARG FRONTEND_REPO`）。因此：
+
+1. 在 Render 上新建 **Web Service**，Source 选 **Public Git repository**，填后端仓库地址；
+   Runtime 选 **Docker**（会自动读取仓库里的 `Dockerfile`）；
+2. 环境变量只需要一个：`DATABASE_URL` = Neon 的 Postgres 连接串（不设则用容器内 SQLite，
+   但免费实例的文件系统是临时的，重启会丢数据）；
+3. 部署完成后，**一个地址**即可：`/` 打开计算器、`/docs` 打开接口文档。
+
+> 如果前端仓库改名或换账号，请相应修改 `Dockerfile` 里的 `FRONTEND_REPO` 默认值
+> （也可在 Render 的构建参数里覆盖）。
